@@ -16,16 +16,16 @@ struct StolenImage{
 const char *BingLink = "https://www.bing.com/";
 
 size_t CurlWrite_CallbackFunc_StdString(void *contents, size_t size, size_t nmemb, std::string *s){
-     size_t newLength = size*nmemb;
-     try{
-         s->append((char*)contents, newLength);
-     }
-     catch(std::bad_alloc &e){
+    size_t newLength = size*nmemb;
+    try{
+        s->append((char*)contents, newLength);
+    }
+    catch(std::bad_alloc &e){
          // handle memory problem
-         return 0;
-     }
-     return newLength;
- }
+        return 0;
+    }
+    return newLength;
+}
 
 // Yes it just gets the bing homepage...
 std::string BingGetter(StolenImage ImageToSteal);
@@ -45,10 +45,10 @@ std::string BingGetter(StolenImage ImageToSteal){
 		curl_easy_setopt(curl, CURLOPT_USERAGENT, "photothife-agent/1.0");
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, CurlWrite_CallbackFunc_StdString);
          	// Passed Provided string to the callback function noted above
-         	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
+    	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
  
          	// This makes the curl connection
-         	curl_easy_perform(curl);
+        curl_easy_perform(curl);
 
 
 	}
