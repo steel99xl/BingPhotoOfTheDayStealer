@@ -1,2 +1,2 @@
 #!/bin/sh
-clangg++ -std=c++17 main.cpp -lcurl -O2 -o BingPhotoOfTheDay
+clang++ -std=c++17 main.cpp -lcurl -O2 -o BingPhotoOfTheDay
