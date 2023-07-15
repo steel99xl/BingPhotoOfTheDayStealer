@@ -59,15 +59,17 @@ std::string BingGetter(StolenImage ImageToSteal){
 std::string BingPageToWallPaper(StolenImage ImageToSteal){
 	std::string Output; // This is will be the url to the wallpaper
 
-	std::size_t StartPos = ImageToSteal.PageBuffer.find("background-image: url(")+22;
+	std::size_t StartPos = ImageToSteal.PageBuffer.find("link rel=\"preload\" href=\"")+26;
 
 	std::size_t EndPos = ImageToSteal.PageBuffer.find("&", StartPos);
+
 	if(ImageToSteal){
 		StartPos = ImageToSteal.PageBuffer.find(".", StartPos) + 1;
 		Output = ImageToSteal.PageBuffer.substr(StartPos, EndPos-StartPos);
 	} else {
 		Output = BingLink + ImageToSteal.PageBuffer.substr(StartPos, EndPos-StartPos);
 	}
+	
 
 	return Output;
 
