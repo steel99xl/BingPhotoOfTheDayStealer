@@ -61,13 +61,13 @@ std::string BingPageToWallPaper(StolenImage ImageToSteal){
 
 	std::size_t StartPos = ImageToSteal.PageBuffer.find("link rel=\"preload\" href=\"")+26;
 
-	std::size_t EndPos = ImageToSteal.PageBuffer.find("&", StartPos);
+	std::size_t EndPos = ImageToSteal.PageBuffer.find("&", StartPos) -4;
 
 	if(ImageToSteal){
 		StartPos = ImageToSteal.PageBuffer.find(".", StartPos) + 1;
-		Output = ImageToSteal.PageBuffer.substr(StartPos, EndPos-StartPos);
+		Output = ImageToSteal.PageBuffer.substr(StartPos, EndPos-StartPos) + "jpg";
 	} else {
-		Output = BingLink + ImageToSteal.PageBuffer.substr(StartPos, EndPos-StartPos);
+		Output = BingLink + ImageToSteal.PageBuffer.substr(StartPos, EndPos-StartPos) + "jpg";
 	}
 	
 
@@ -96,7 +96,7 @@ void SaveStolenImage(StolenImage ImageToSteal){
 }
 
 int main(){
-	std::cout << "boop, still under development" << std::endl;
+	std::cout << "BingImageStealer V1.1" << std::endl;
 
 	StolenImage ImageToSteal;
 	
@@ -114,7 +114,7 @@ int main(){
 
 	SaveStolenImage(ImageToSteal);
 
-	std::cout << "An image should have been stolen uwu" << std::endl;
+	std::cout << "An image should have been downloaded" << std::endl;
 
 
 	return 0;
