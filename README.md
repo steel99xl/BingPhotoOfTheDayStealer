@@ -9,6 +9,4 @@
 
 ```./BingPhotoOfTheDay -p | Preview befor theft```
 
-```./BingPhotoOfTheDay```
-
 ```./BingPhotoOfTheDay -h | This Screen```
