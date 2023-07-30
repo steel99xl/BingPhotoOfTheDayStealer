@@ -4,16 +4,19 @@
 #include <fstream>
 #include <cstring>
 
-struct StolenImage{
+typedef struct stoleimage{
+	enum States {NORMAL, VERBOSE, LINK, PERVIEW};
 	bool HasUrl = false;
 	std::string PageBuffer = "";
 	std::string Url = "";
 	std::string FileName = "";
+	States Option = NORMAL;
 	
 	operator bool(){return HasUrl;}
-};
+} StolenImage;
 
 const char *BingLink = "https://www.bing.com/";
+std::string Preview = "xdg-open ";
 
 size_t CurlWrite_CallbackFunc_StdString(void *contents, size_t size, size_t nmemb, std::string *s){
     size_t newLength = size*nmemb;
@@ -28,7 +31,6 @@ size_t CurlWrite_CallbackFunc_StdString(void *contents, size_t size, size_t nmem
 }
 
 // Yes it just gets the bing homepage...
-std::string BingGetter(StolenImage ImageToSteal);
 std::string BingGetter(StolenImage ImageToSteal){
 	std::string data;
 	char url[128];
@@ -66,8 +68,14 @@ std::string BingPageToWallPaper(StolenImage ImageToSteal){
 	if(ImageToSteal){
 		StartPos = ImageToSteal.PageBuffer.find(".", StartPos) + 1;
 		Output = ImageToSteal.PageBuffer.substr(StartPos, EndPos-StartPos) + "jpg";
+		if(ImageToSteal.Option == stoleimage::VERBOSE){
+			std::cout << Output << std::endl;
+		}
 	} else {
 		Output = BingLink + ImageToSteal.PageBuffer.substr(StartPos, EndPos-StartPos) + "jpg";
+		if(ImageToSteal.Option == stoleimage::VERBOSE){
+			std::cout << Output << std::endl;
+		}
 	}
 	
 
@@ -95,26 +103,70 @@ void SaveStolenImage(StolenImage ImageToSteal){
 
 }
 
-int main(){
+int main(int argc, char **argv){
 	std::cout << "BingImageStealer V1.1" << std::endl;
 
 	StolenImage ImageToSteal;
-	
+
+
+	if(argc >= 2){
+		if(argv[1][0] == '-'){
+			switch(argv[1][1]){
+				case 'v' :
+					ImageToSteal.Option = stoleimage::VERBOSE;
+
+					break;
+				case 'l' :
+					ImageToSteal.Option = stoleimage::LINK;
+
+					break;
+				case 'p' :
+					ImageToSteal.Option = stoleimage::PERVIEW;
+
+					break;
+				default :
+					std::cout << """./BingPhotoOfTheDay | Steals Bings photo of the day, saves in running dir\n\r./BingPhotoOfTheDay -v | Verbose mode\n\r./BingPhotoOfTheDay -l | Link only mode, only prints link to image\n\r./BingPhotoOfTheDay -p | Preview image of the day\n\r./BingPhotoOfTheDay -h | This Screen...""" << std::endl;
+					return 1;
+					break;
+			}
+
+		}
+	}	
+
+	if(ImageToSteal.Option == stoleimage::VERBOSE){
+			std::cout << "Connecting to " << BingLink <<  std::endl;
+	}
+
 	ImageToSteal.PageBuffer = BingGetter(ImageToSteal);
 
 	ImageToSteal.Url = BingPageToWallPaper(ImageToSteal);
 	ImageToSteal.HasUrl = true;
 	ImageToSteal.FileName = BingPageToWallPaper(ImageToSteal);
 
-	std::cout << ImageToSteal.FileName << std::endl;
+	if(ImageToSteal.Option == stoleimage::LINK){
+		std::cout << ImageToSteal.Url << std::endl;
+		return 0;
+	}
+
+	if(ImageToSteal.Option == stoleimage::PERVIEW){
+		std::string TMP = Preview + ImageToSteal.Url;
+		system(TMP.c_str());
+		return 0;
+	}
+
+	if(ImageToSteal.Option == stoleimage::VERBOSE){
+		std::cout << ImageToSteal.FileName << std::endl;
+		return 0;
+	}
 
 	//ImageToSteal.FileName = "UwUStolen.jpg";
+	if(ImageToSteal.Option == stoleimage::NORMAL || ImageToSteal.Option == stoleimage::VERBOSE){
 
-	ImageToSteal.PageBuffer = BingGetter(ImageToSteal);
+		ImageToSteal.PageBuffer = BingGetter(ImageToSteal);
+		SaveStolenImage(ImageToSteal);
+		std::cout << "An image should have been downloaded" << std::endl;
+	}
 
-	SaveStolenImage(ImageToSteal);
-
-	std::cout << "An image should have been downloaded" << std::endl;
 
 
 	return 0;
