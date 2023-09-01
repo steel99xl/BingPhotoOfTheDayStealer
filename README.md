@@ -5,8 +5,11 @@
 
 ```./BingPhotoOfTheDay -v | Verbose mode ```
 
+```./BingPhotoOfTheDay -f [FILENAME] | Specify name for the image```
+
 ```./BingPhotoOfTheDay -l | Link only mode, only prints link to image```
 
 ```./BingPhotoOfTheDay -p | Preview befor theft```
 
-```./BingPhotoOfTheDay -h | This Screen```
+```./BingPhotoOfTheDay -* | This Screen```
+
